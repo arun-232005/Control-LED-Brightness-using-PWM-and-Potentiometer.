@@ -1,92 +1,83 @@
-# Control-LED-Brightness-using-PWM-and-Potentiometer.
-### 1. Aim
+# CONTROL LED BRIGHTNESS USING PWM AND POTENTIOMETER
 
-To control the brightness of an LED using **Pulse Width Modulation (PWM)** by varying the output of a **potentiometer** using an Arduino board.
+## EXP 7 CONTROL LED BRIGHTNESS USING PWM AND POTENTIOMETER
 
-### 2. Apparatus Required
+### Aim
+To control the brightness of an LED using a Potentiometer and PWM (Pulse Width Modulation) with an Arduino UNO Board.
 
-| S. No. | Component             |    Quantity |
-| ------ | --------------------- | ----------: |
-| 1      | Arduino Uno           |           1 |
-| 2      | LED                   |           1 |
-| 3      | Potentiometer (10 kΩ) |           1 |
-| 4      | Resistor (220 Ω)      |           1 |
-| 5      | Breadboard            |           1 |
-| 6      | Jumper wires          | As required |
-| 7      | USB cable             |           1 |
+# Hardware / Software Tools Required
 
-### 3. Software Required
+- Arduino UNO Board
+- USB Cable
+- PC/Laptop with Arduino IDE Installed
+- Breadboard
+- LED
+- 220 Ω Resistor
+- 10 kΩ Potentiometer
+- Jumper Wires
 
-* Arduino IDE
-* Arduino USB driver, if required
-* Arduino C/C++ programming language
+# Circuit Diagram
 
-### 4. Theory
+---
+<img width="422" height="747" alt="image" src="https://github.com/user-attachments/assets/0d310fab-1c4c-48d5-86f4-04b3a2cdb82c" />
 
-A potentiometer produces a variable analog voltage when its knob is rotated. The Arduino reads this voltage using an **analog input pin**.
+---
 
-The `analogRead()` function gives a value from **0 to 1023**. This value is converted to a PWM value from **0 to 255** using the `map()` function.
+# Procedure
 
-The PWM value is then sent to a PWM-enabled digital pin using `analogWrite()`.
+## Step 1: Assemble the Circuit
 
-* PWM value **0** → LED OFF
-* PWM value **255** → LED maximum brightness
-* Intermediate values → Corresponding LED brightness
+1. Place the Arduino UNO, breadboard, LED, resistor, and potentiometer on the workbench.
+2. Connect the Arduino **5V** pin to the positive rail of the breadboard.
+3. Connect the Arduino **GND** pin to the ground rail of the breadboard.
 
-### 5. Circuit Diagram
+## Step 2: Connect the Potentiometer
 
-```text
-                 Arduino UNO
-              +----------------+
-              |                |
-   Potentiometer               |
-              |                |
-   Left  -----+ 5V             |
-   Middle ---- A0              |
-   Right ----- GND             |
-              |                |
-              |                |
-              |       D9       |------[220 Ω]------>|------ GND
-              |                |                    LED
-              +----------------+
+1. Connect one outer terminal of the potentiometer to **5V**.
+2. Connect the other outer terminal to **GND**.
+3. Connect the middle terminal (wiper) to **Analog Pin A0** of the Arduino.
+
+## Step 3: Connect the LED
+
+1. Connect the **anode (+)** of the LED to **Digital Pin 9 (PWM Pin)** through a **220 Ω resistor**.
+2. Connect the **cathode (-)** of the LED to **GND**.
+
+## Step 4: Connect the Arduino
+
+1. Connect the Arduino UNO to the computer using a USB cable.
+2. Open the Arduino IDE.
+3. Select **Tools → Board → Arduino UNO**.
+4. Select the appropriate **COM Port**.
+
+## Step 5: Write and Upload the Program
+
+1. Create a new sketch in the Arduino IDE.
+2. Enter the Arduino program for controlling LED brightness using PWM.
+3. Verify the program by clicking the **Verify** button.
+4. Upload the program to the Arduino UNO by clicking the **Upload** button.
+
+## Step 6: Execute the Program
+
+1. After successful upload, rotate the potentiometer knob slowly.
+2. Observe the brightness of the LED changing smoothly.
+3. Open the **Serial Monitor** (9600 baud) to view the analog and PWM values.
+
+## Step 7: Verify the Output
+
+1. Rotate the potentiometer from minimum to maximum position.
+2. Observe the corresponding variation in LED brightness.
+3. Record the observations.
+
+# Program
+
 ```
+// Control LED Brightness using PWM and Potentiometer
 
-**Potentiometer connections:**
+const int potPin = A0;     // Potentiometer connected to A0
+const int ledPin = 11;      // PWM pin connected to LED
 
-* One outer pin → **5V**
-* Other outer pin → **GND**
-* Middle/wiper pin → **A0**
-
-**LED connections:**
-
-* Arduino **D9 (PWM)** → **220 Ω resistor** → LED anode (+)
-* LED cathode (−) → **GND**
-
-> **Note:** Pin D9 is used because it is a PWM-enabled pin on the Arduino Uno.
-
-### 6. Procedure
-
-1. Connect the potentiometer to the Arduino:
-
-   * One terminal to 5V.
-   * The other terminal to GND.
-   * The middle terminal to analog pin A0.
-2. Connect the LED to PWM pin D9 through a 220 Ω resistor.
-3. Connect the LED's cathode to GND.
-4. Connect the Arduino Uno to the computer using a USB cable.
-5. Open the **Arduino IDE**.
-6. Select the appropriate Arduino board and COM port.
-7. Enter the program given below.
-8. Compile the program and upload it to the Arduino.
-9. Open the Serial Monitor if you want to observe the potentiometer and PWM values.
-10. Rotate the potentiometer.
-11. Observe that the LED brightness changes according to the potentiometer position.
-
-### 7. Program
-
-```cpp
-const int potPin = A0;
-const int ledPin = 9;
+int potValue = 0;
+int brightness = 0;
 
 void setup() {
   pinMode(ledPin, OUTPUT);
@@ -94,47 +85,38 @@ void setup() {
 }
 
 void loop() {
-  // Read potentiometer value
-  int potValue = analogRead(potPin);
 
-  // Convert 0-1023 to 0-255
-  int pwmValue = map(potValue, 0, 1023, 0, 255);
+  // Read potentiometer value (0 to 1023)
+  potValue = analogRead(potPin);
+
+  // Convert to PWM range (0 to 255)
+  brightness = map(potValue, 0, 1023, 0, 255);
 
   // Set LED brightness
-  analogWrite(ledPin, pwmValue);
+  analogWrite(ledPin, brightness);
 
   // Display values on Serial Monitor
   Serial.print("Potentiometer: ");
   Serial.print(potValue);
-  Serial.print("  PWM: ");
-  Serial.println(pwmValue);
+  Serial.print("  Brightness: ");
+  Serial.println(brightness);
 
   delay(10);
 }
 ```
 
-### 8. Output
+# Observation
+## LED WITH LOW BRIGHTNESS
 
-When the potentiometer is rotated:
+<img width="720" height="1280" alt="WhatsApp Image 2026-08-06 at 11 33 03 AM" src="https://github.com/user-attachments/assets/8f989819-8b18-41b8-8e9e-01211744cf9c" />
 
-| Potentiometer Position | Analog Value | PWM Value | LED Brightness |
-| ---------------------- | -----------: | --------: | -------------- |
-| Minimum                |           ~0 |         0 | OFF            |
-| Low                    |         ~256 |       ~64 | Dim            |
-| Medium                 |         ~512 |      ~128 | Medium         |
-| High                   |         ~768 |      ~191 | Bright         |
-| Maximum                |        ~1023 |       255 | Maximum        |
 
-**Serial Monitor output:**
 
-```text
-Potentiometer: 0    PWM: 0
-Potentiometer: 256  PWM: 64
-Potentiometer: 512  PWM: 128
-Potentiometer: 768  PWM: 191
-Potentiometer: 1023 PWM: 255
-```
+## LED WITH HIGH BRIGHTNESS
 
-### 9. Result
+<img width="1600" height="1284" alt="image" src="https://github.com/user-attachments/assets/dbdb89ac-b325-4bc4-bf12-c036782fc3ca" />
 
-Thus, the **brightness of the LED was successfully controlled using PWM and a potentiometer**. As the potentiometer was rotated, the analog input value changed and the corresponding PWM output varied, thereby changing the LED brightness.
+# Result
+
+The LED brightness was successfully controlled using a potentiometer by varying the PWM signal generated by the Arduino UNO. The LED intensity changed smoothly according to the position of the potentiometer, demonstrating the working principle of Pulse Width Modulation (PWM).
+onstrating the working principle of Pulse Width Modulation (PWM).
